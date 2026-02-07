@@ -45,7 +45,7 @@ export function PasswordDialog({
   }, [initialData, selectedCategoryId, isOpen]);
 
   const generatePassword = () => {
-    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%&*";
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%&*_";
     let result = "";
     for (let i = 0; i < 16; i++) {
       result += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -81,7 +81,7 @@ export function PasswordDialog({
         {/* Title bar */}
         <div className="flex items-center justify-between px-3 py-1.5 gradient-button">
           <span className="text-sm font-bold text-primary-foreground">
-            {initialData ? "Редактировать запись" : "Новая запись"} 🐱
+            {initialData ? "Редактировать запись" : "Новая запись"}
           </span>
           <button
             onClick={onClose}

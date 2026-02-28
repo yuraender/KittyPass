@@ -13,6 +13,11 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [react()].filter(Boolean),
   base: mode === 'production' ? './' : '/',
+  build: {
+    rollupOptions: {
+      external: ['better-sqlite3'],
+    },
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

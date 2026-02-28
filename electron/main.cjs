@@ -1,21 +1,19 @@
-// electron/main.js
-import { app, BrowserWindow, ipcMain } from 'electron';
-import path from 'path';import { fileURLToPath } from 'url';
+const { app, BrowserWindow, ipcMain } = require('electron');
+const path = require('path');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 const isDev = process.env.NODE_ENV === 'development';
 
-let mainWindow: BrowserWindow | null = null;
+let mainWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.ts'),
+      preload: path.join(__dirname, 'preload.cjs'),
       nodeIntegration: false,
       contextIsolation: true,
+      sandbox: false,
     },
   });
 

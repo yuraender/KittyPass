@@ -3,7 +3,7 @@ import { Folder, FolderOpen, Plus, Trash2, MessageCircleMore, Gamepad2, Shopping
 import { cn } from "@/lib/utils";
 
 export interface Category {
-  id: string;
+  id: number | string;
   name: string;
   icon: "message_circle_more" | "gamepad" | "shopping" | "folder";
   isSystem?: boolean;

@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Shield } from "lucide-react";
 import { WindowFrame } from "@/components/WindowFrame";
 import { CategorySidebar, Category } from "@/components/CategorySidebar";
 import { PasswordTable, PasswordEntry } from "@/components/PasswordTable";
 import { PasswordDialog } from "@/components/PasswordDialog";
+
+const electronAPI = (window as any).electronAPI;
 
 // Demo categories
 const initialCategories: Category[] = [
@@ -41,39 +43,41 @@ const initialPasswords: PasswordEntry[] = [
 ];
 
 export default function Index() {
-  const [categories, setCategories] = useState<Category[]>(initialCategories);
-  const [passwords, setPasswords] = useState<PasswordEntry[]>(initialPasswords);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+  const [passwords, setPasswords] = useState<PasswordEntry[]>([]);
   const [editingPassword, setEditingPassword] = useState<PasswordEntry | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // Category handlers
-  const handleAddCategory = (name: string) => {
-    const newCategory: Category = {
-      id: Date.now().toString(),
-      name,
-      icon: "folder",
-    };
-    setCategories((prev) => [...prev, newCategory]);
+  const loadCategories = async () => {
+    const cats = await electronAPI.getCategories();
+    setCategories(cats);
   };
 
-  const handleDeleteCategory = (id: string) => {
-    setCategories((prev) => prev.filter((c) => c.id !== id));
-    // Move passwords from deleted category to uncategorized
-    setPasswords((prev) =>
-      prev.map((p) => (p.categoryId === id ? { ...p, categoryId: null } : p))
-    );
+  const handleAddCategory = async (name: string) => {
+    await electronAPI.addCategory({ name, icon: 'folder' });
+    loadCategories();
+  };
+
+  const handleDeleteCategory = async (id: string) => {
+    await electronAPI.removeCategory(id);
+    loadCategories();
     if (selectedCategoryId === id) {
       setSelectedCategoryId(null);
     }
   };
 
-  // Filter passwords by selected category
-  const filteredPasswords = selectedCategoryId
-    ? passwords.filter((p) => p.categoryId === selectedCategoryId)
-    : passwords;
-
   // Password handlers
+  const loadPasswords = async (categoryId: string | null = null) => {
+    const passwords = await electronAPI.getPasswords(categoryId);
+    setPasswords(passwords);
+  };
+  useEffect(() => {
+    loadCategories();
+    loadPasswords(selectedCategoryId);
+  }, [selectedCategoryId]);
+
   const handleAddPassword = () => {
     setEditingPassword(null);
     setIsDialogOpen(true);
@@ -84,24 +88,20 @@ export default function Index() {
     setIsDialogOpen(true);
   };
 
-  const handleDeletePassword = (id: string) => {
-    setPasswords((prev) => prev.filter((p) => p.id !== id));
+  const handleDeletePassword = async (id: string) => {
+    await electronAPI.removePassword(id);
+    loadPasswords(selectedCategoryId);
   };
 
-  const handleSavePassword = (data: Omit<PasswordEntry, "id"> & { id?: string }) => {
+  const handleSavePassword = async (data: Omit<PasswordEntry, "id"> & { id?: string }) => {
     if (data.id) {
       // Update existing
-      setPasswords((prev) =>
-        prev.map((p) => (p.id === data.id ? { ...p, ...data } as PasswordEntry : p))
-      );
+      await electronAPI.updatePassword(data);
     } else {
       // Add new
-      const newPassword: PasswordEntry = {
-        ...data,
-        id: Date.now().toString(),
-      };
-      setPasswords((prev) => [newPassword, ...prev]);
+      await electronAPI.addPassword(data);
     }
+    loadPasswords(selectedCategoryId);
   };
 
   return (
@@ -122,7 +122,7 @@ export default function Index() {
         {/* Main content */}
         <div className="flex-1 bg-card">
           <PasswordTable
-            passwords={filteredPasswords}
+            passwords={passwords}
             onAdd={handleAddPassword}
             onEdit={handleEditPassword}
             onDelete={handleDeletePassword}

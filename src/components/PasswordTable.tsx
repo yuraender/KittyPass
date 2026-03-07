@@ -3,12 +3,12 @@ import { Eye, EyeOff, Copy, Check, Pencil, Trash2, Plus, Search, X } from "lucid
 import { cn } from "@/lib/utils";
 
 export interface PasswordEntry {
-  id: string;
+  id: number | string;
   title: string;
   username: string;
   password: string;
-  description: string;
-  categoryId: string | null;
+  description?: string;
+  categoryId?: string | null;
 }
 
 interface PasswordTableProps {

@@ -120,7 +120,7 @@ export function PasswordDialog({
             >
               <option value="">-</option>
               {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
+                <option key={cat.id} value={cat.id} selected={categoryId !== null && String(categoryId) === String(cat.id)}>
                   {cat.name}
                 </option>
               ))}

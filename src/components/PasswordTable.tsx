@@ -127,7 +127,7 @@ export function PasswordTable({ passwords, onAdd, onEdit, onDelete }: PasswordTa
                   onClick={() => setSelectedId(entry.id)}
                   onDoubleClick={() => onEdit(entry)}
                   className={cn(
-                    "border-b border-border cursor-pointer transition-colors",
+                    "password border-b border-border cursor-pointer transition-colors",
                     selectedId === entry.id
                       ? "bg-primary/10"
                       : index % 2 === 0

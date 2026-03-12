@@ -9,9 +9,9 @@ let mainWindow;
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 900,
-    height: 550,
+    height: 650,
     frame: false,
-    backgroundColor: '#00000000',
+    backgroundColor: '#1e1e1e',
     webPreferences: {
       preload: path.join(__dirname, 'preload.cjs'),
       nodeIntegration: false,

@@ -8,8 +8,10 @@ let mainWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
+    width: 900,
+    height: 550,
+    frame: false,
+    backgroundColor: '#00000000',
     webPreferences: {
       preload: path.join(__dirname, 'preload.cjs'),
       nodeIntegration: false,
@@ -26,6 +28,19 @@ function createWindow() {
   }
 }
 
+ipcMain.on('window-minimize', (event) => {
+  BrowserWindow.fromWebContents(event.sender).minimize();
+});
+ipcMain.on('window-maximize', (event) => {
+  const win = BrowserWindow.fromWebContents(event.sender);
+  if (win.isMaximized())
+    win.unmaximize();
+  else
+    win.maximize();
+});
+ipcMain.on('window-close', (event) => {
+  BrowserWindow.fromWebContents(event.sender).close();
+});
 ipcMain.handle('get-categories', () => db.getCategories());
 ipcMain.handle('add-category', (event, { name, icon }) => db.addCategory(name, icon));
 ipcMain.handle('remove-category', (event, id) => db.removeCategory(id));

@@ -9,21 +9,27 @@ interface WindowFrameProps {
 
 export function WindowFrame({ title, icon, children }: WindowFrameProps) {
   return (
-    <div className="flex flex-col h-screen bg-background overflow-hidden border-2 border-pink-medium/50 rounded-lg shadow-card m-2">
+    <div className="flex flex-col h-screen bg-background overflow-hidden border-2 border-pink-medium/50 rounded-lg shadow-card">
       {/* Title bar */}
-      <div className="flex items-center justify-between px-3 py-1.5 gradient-button select-none">
+      <div className="titlebar flex items-center justify-between px-3 py-1.5 gradient-button select-none">
         <div className="flex items-center gap-2">
           {icon && <span className="text-primary-foreground">{icon}</span>}
           <span className="text-sm font-bold text-primary-foreground">{title}</span>
         </div>
         <div className="flex items-center gap-1">
-          <button className="p-1 hover:bg-primary-foreground/20 rounded transition-colors">
+          <button
+            onClick={() => window.electronAPI.minimizeWindow()}
+            className="p-1 hover:bg-primary-foreground/20 rounded transition-colors">
             <Minus className="w-3.5 h-3.5 text-primary-foreground" />
           </button>
-          <button className="p-1 hover:bg-primary-foreground/20 rounded transition-colors">
+          <button
+            onClick={() => window.electronAPI.maximizeWindow()}
+            className="p-1 hover:bg-primary-foreground/20 rounded transition-colors">
             <Square className="w-3 h-3 text-primary-foreground" />
           </button>
-          <button className="p-1 hover:bg-destructive rounded transition-colors">
+          <button
+            onClick={() => window.electronAPI.closeWindow()}
+            className="p-1 hover:bg-destructive rounded transition-colors">
             <X className="w-3.5 h-3.5 text-primary-foreground" />
           </button>
         </div>

@@ -1,6 +1,9 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
+  minimizeWindow: () => ipcRenderer.send('window-minimize'),
+  maximizeWindow: () => ipcRenderer.send('window-maximize'),
+  closeWindow: () => ipcRenderer.send('window-close'),
   getCategories: () => ipcRenderer.invoke('get-categories'),
   addCategory: (data) => ipcRenderer.invoke('add-category', data),
   removeCategory: (id) => ipcRenderer.invoke('remove-category', id),

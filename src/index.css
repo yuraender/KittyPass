@@ -65,6 +65,21 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+  
+  html, body {
+    background: transparent !important;
+  }
+
+  .titlebar {
+    -webkit-app-region: drag;
+    height: 30px;
+    display: flex;
+    align-items: center;
+  }
+
+  .titlebar button {
+    -webkit-app-region: no-drag;
+  }
 
   .dark {
     --background: 340 30% 8%;

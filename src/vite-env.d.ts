@@ -17,6 +17,11 @@ interface PasswordEntry {
 }
 
 interface ElectronAPI {
+  // Window
+  minimizeWindow: () => Promise<void>;
+  maximizeWindow: () => Promise<void>;
+  closeWindow: () => Promise<void>;
+
   // Categories
   getCategories: () => Promise<Category[]>;
   addCategory: (data: { name: string; icon?: string }) => Promise<Category>;

@@ -1,4 +1,5 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, dialog, ipcMain } = require('electron');
+const fs = require('fs');
 const path = require('path');
 const db = require('./database.cjs');
 
@@ -48,6 +49,43 @@ ipcMain.handle('get-passwords', (event, categoryId) => db.getPasswords(categoryI
 ipcMain.handle('add-password', (event, password) => db.addPassword(password));
 ipcMain.handle('update-password', (event, password) => db.updatePassword(password));
 ipcMain.handle('remove-password', (event, id) => db.removePassword(id));
+ipcMain.handle('exportData', async () => {
+  const { filePath, canceled } = await dialog.showSaveDialog(mainWindow, {
+    title: 'Экспорт данных',
+    defaultPath: 'kittypass-backup.json',
+    filters: [{ name: 'JSON Files', extensions: ['json'] }]
+  });
+  if (canceled || !filePath)
+    return { success: false, canceled: true };
+  try {
+    const jsonData = db.exportData();
+    fs.writeFileSync(filePath, jsonData, 'utf-8');
+    return { success: true, filePath };
+  } catch (error) {
+    console.error('Export error:', error);
+    return { success: false, error: error.message };
+  }
+});
+ipcMain.handle('importData', async () => {
+  const { filePaths } = await dialog.showOpenDialog(mainWindow, {
+    title: 'Иипорт данных',
+    filters: [{ name: 'JSON Files', extensions: ['json'] }],
+    properties: ['openFile']
+  });
+  if (!filePaths || filePaths.length === 0)
+    return { success: false, canceled: true };
+  try {
+    const jsonData = fs.readFileSync(filePaths[0], 'utf-8');
+    db.importData(jsonData);
+    return {
+      success: true,
+      filePath: filePaths[0]
+    };
+  } catch (error) {
+    console.error('Import error:', error);
+    return { success: false, error: error.message };
+  }
+});
 
 app.whenReady().then(createWindow);
 

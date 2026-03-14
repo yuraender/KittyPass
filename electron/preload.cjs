@@ -8,7 +8,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   addCategory: (data) => ipcRenderer.invoke('add-category', data),
   removeCategory: (id) => ipcRenderer.invoke('remove-category', id),
   getPasswords: (categoryId) => ipcRenderer.invoke('get-passwords', categoryId),
-  addPassword: (pwd) => ipcRenderer.invoke('add-password', pwd),
-  updatePassword: (pwd) => ipcRenderer.invoke('update-password', pwd),
+  addPassword: (data) => ipcRenderer.invoke('add-password', data),
+  updatePassword: (data) => ipcRenderer.invoke('update-password', data),
   removePassword: (id) => ipcRenderer.invoke('remove-password', id),
+  exportData: () => ipcRenderer.invoke('exportData'),
+  importData: () => ipcRenderer.invoke('importData'),
 });

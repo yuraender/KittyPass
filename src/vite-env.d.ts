@@ -32,6 +32,10 @@ interface ElectronAPI {
   addPassword: (pwd: PasswordEntry) => Promise<{ id: number | string }>;
   updatePassword: (pwd: PasswordEntry) => Promise<void>;
   removePassword: (id: number | string) => Promise<void>;
+
+  // Export/import
+  exportData: () => Promise<void>;
+  importData: () => Promise<void>;
 }
 
 declare global {

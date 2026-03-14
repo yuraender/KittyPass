@@ -7,39 +7,11 @@ import { PasswordDialog } from "@/components/PasswordDialog";
 
 const electronAPI = (window as any).electronAPI;
 
-// Demo categories
-const initialCategories: Category[] = [
-  { id: "social", name: "Соцсети", icon: "message_circle_more", isSystem: true },
-  { id: "games", name: "Игры", icon: "gamepad", isSystem: true },
-  { id: "shopping", name: "Магазины", icon: "shopping", isSystem: true },
-];
-
-// Demo passwords
-const initialPasswords: PasswordEntry[] = [
-  {
-    id: "1",
-    title: "Discord",
-    username: "yuraender",
-    password: "SomePassword",
-    description: "Мой дс аккаунт",
-    categoryId: "social",
-  },
-  {
-    id: "2",
-    title: "Genshin Impact",
-    username: "yuraender@yandex.ru",
-    password: "EbuSobak12731723",
-    description: "qiqi mainer",
-    categoryId: "games",
-  },
-  {
-    id: "3",
-    title: "Wildberries",
-    username: "something@gmail.com",
-    password: "password1",
-    description: "Параша, а не магаз",
-    categoryId: "shopping",
-  },
+// System categories
+const systemCategories: Category[] = [
+  { name: "Соцсети", icon: "message_circle_more" },
+  { name: "Игры", icon: "gamepad" },
+  { name: "Магазины", icon: "shopping" },
 ];
 
 export default function Index() {
@@ -51,7 +23,17 @@ export default function Index() {
 
   // Category handlers
   const loadCategories = async () => {
-    const cats = await electronAPI.getCategories();
+    let cats = await electronAPI.getCategories();
+    if (cats.length === 0) {
+      for (const cat of systemCategories) {
+        const created = await electronAPI.addCategory({
+          name: cat.name,
+          icon: cat.icon,
+          isSystem: 1,
+        });
+      }
+      cats = await electronAPI.getCategories();
+    }
     setCategories(cats);
   };
 

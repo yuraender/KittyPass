@@ -5,7 +5,7 @@ const fs = require('fs');
 
 // Папка для хранения базы (%APPDATA%/kitty-pass)
 const userDataPath = app.getPath('userData');
-const dbFolder = path.join(userDataPath, 'data');
+const dbFolder = path.join(userDataPath, 'Data');
 if (!fs.existsSync(dbFolder)) {
   fs.mkdirSync(dbFolder, { recursive: true });
 }

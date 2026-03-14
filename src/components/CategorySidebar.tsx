@@ -6,7 +6,7 @@ export interface Category {
   id: number | string;
   name: string;
   icon: "message_circle_more" | "gamepad" | "shopping" | "folder";
-  isSystem?: boolean;
+  is_system?: boolean;
 }
 
 interface CategorySidebarProps {
@@ -100,7 +100,7 @@ export function CategorySidebar({ categories, selectedId, onSelect, onAdd, onDel
                 )}
                 <span className="flex-1 truncate">{cat.name}</span>
               </button>
-              {!cat.isSystem && (
+              {!cat.is_system && (
                 <button
                   onClick={(e) => {
                     e.stopPropagation();

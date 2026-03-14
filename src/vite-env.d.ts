@@ -24,7 +24,7 @@ interface ElectronAPI {
 
   // Categories
   getCategories: () => Promise<Category[]>;
-  addCategory: (data: { name: string; icon?: string }) => Promise<Category>;
+  addCategory: (data: { name: string; icon?: string, isSystem: number = 0 }) => Promise<Category>;
   removeCategory: (id: number | string) => Promise<void>;
 
   // Passwords

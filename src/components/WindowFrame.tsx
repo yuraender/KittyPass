@@ -1,5 +1,7 @@
 import { Minus, Square, X } from "lucide-react";
 import { ReactNode, useState } from "react";
+import { useTheme } from "@/contexts/ThemeContext";
+import { ThemeSettingsDialog } from "@/components/ThemeSettingsDialog";
 import { toast } from "sonner";
 
 interface WindowFrameProps {
@@ -9,6 +11,8 @@ interface WindowFrameProps {
 }
 
 export function WindowFrame({ title, icon, children }: WindowFrameProps) {
+  const [themeOpen, setThemeOpen] = useState(false);
+  const { backgroundImage, backgroundOpacity } = useTheme();
   const [isImporting, setIsImporting] = useState(false);
   const handleExport = async () => {
     const result = await window.electronAPI.exportData();
@@ -42,8 +46,20 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
   };
   return (
     <div className="flex flex-col h-screen bg-background overflow-hidden border-2 border-pink-medium/50 rounded-lg shadow-card">
+      {/* Background image */}
+      {backgroundImage && (
+        <div
+        className="absolute inset-0 bg-cover bg-no-repeat pointer-events-none z-10"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundPosition: "center 66px",
+          opacity: backgroundOpacity,
+        }}
+        />
+      )}
+
       {/* Title bar */}
-      <div className="titlebar flex items-center justify-between px-3 py-1.5 gradient-button select-none">
+      <div className="relative titlebar flex items-center justify-between px-3 py-1.5 gradient-button">
         <div className="flex items-center gap-2">
           {icon && <span className="text-primary-foreground">{icon}</span>}
           <span className="text-sm font-bold text-primary-foreground">{title}</span>
@@ -68,14 +84,15 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
       </div>
 
       {/* Menu bar */}
-      <div className="flex items-center gap-1 px-2 py-1 bg-muted border-b border-border text-sm">
+      <div className="relative flex items-center gap-1 px-2 py-1 bg-muted border-b border-border text-sm">
         <div className="relative group">
           <button className="px-3 py-0.5 hover:bg-pink-soft rounded text-foreground font-medium">
             Файл
           </button>
           {/* Dropdown меню */}
           <div className="absolute hidden group-hover:block pt-1 z-50">
-            <div className="bg-popover border border-border rounded-md shadow-lg py-1 w-48 text-sm">
+            <div className="bg-popover border border-border rounded-md shadow-lg py-1 w-48 text-sm"
+                style={{ backgroundColor: "hsl(var(--card))" }}>
               <button
                 onClick={handleExport}
                 className="w-full text-left px-4 py-2 hover:bg-accent hover:text-accent-foreground transition-colors"
@@ -93,20 +110,27 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
           </div>
         </div>
         <button className="px-2 py-0.5 hover:bg-pink-soft rounded text-foreground">Правка</button>
-        <button className="px-2 py-0.5 hover:bg-pink-soft rounded text-foreground">Вид</button>
+        <button
+          onClick={() => setThemeOpen(true)}
+          className="px-2 py-0.5 hover:bg-pink-soft rounded text-foreground"
+        >
+          Вид
+        </button>
         <button className="px-2 py-0.5 hover:bg-pink-soft rounded text-foreground">Помощь</button>
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-hidden">
+      <div className="relative flex-1 overflow-hidden">
         {children}
       </div>
 
       {/* Status bar */}
-      <div className="flex items-center justify-between px-3 py-1 bg-muted border-t border-border text-xs text-muted-foreground">
+      <div className="relative flex items-center justify-between px-3 py-1 bg-muted border-t border-border text-xs text-muted-foreground">
         <span></span>
         <span>KittyPass v1.0.0</span>
       </div>
+
+      <ThemeSettingsDialog isOpen={themeOpen} onClose={() => setThemeOpen(false)} />
     </div>
   );
 }

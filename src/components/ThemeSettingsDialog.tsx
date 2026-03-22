@@ -24,10 +24,10 @@ interface ColorField {
 
 const editableColors: ColorField[] = [
   { key: "primary", label: "Основной", cssVar: "--primary" },
-  { key: "secondary", label: "Вторичный", cssVar: "--secondary" },
   { key: "foreground", label: "Текст", cssVar: "--foreground" },
+  { key: "gradientFirst", label: "Градиент 1", cssVar: "--gradient-first" },
+  { key: "gradientSecond", label: "Градиент 2", cssVar: "--gradient-second" },
   { key: "accent", label: "Акцент", cssVar: "--accent" },
-  { key: "background", label: "Фон", cssVar: "--background" },
   { key: "muted", label: "Затемнение", cssVar: "--muted" },
   { key: "card", label: "Фон диалогов", cssVar: "--card" },
   { key: "border", label: "Границы", cssVar: "--border" },
@@ -117,10 +117,10 @@ export function ThemeSettingsDialog({ isOpen, onClose }: ThemeSettingsDialogProp
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-muted/40">
       <div className="w-[520px] max-h-[80vh] bg-card border-2 border-border rounded-lg shadow-card overflow-hidden flex flex-col">
         {/* Title bar */}
-        <div className="flex items-center justify-between px-3 py-1.5 gradient-button">
+        <div className="flex items-center justify-between px-3 py-1.5 gradient">
           <span className="text-sm font-bold text-primary-foreground">⚙️ Настройки темы</span>
           <button onClick={onClose} className="p-1 hover:bg-primary-foreground/20 rounded">
             <X className="w-3.5 h-3.5 text-primary-foreground" />
@@ -264,7 +264,7 @@ export function ThemeSettingsDialog({ isOpen, onClose }: ThemeSettingsDialogProp
                   </div>
                   <button
                     onClick={handleCustomUrl}
-                    className="px-3 py-1.5 text-sm gradient-button text-primary-foreground rounded hover:opacity-90 transition-opacity"
+                    className="px-3 py-1.5 text-sm gradient text-primary-foreground rounded hover:opacity-90 transition-opacity"
                   >
                     <Upload className="w-3.5 h-3.5" />
                   </button>
@@ -296,7 +296,7 @@ export function ThemeSettingsDialog({ isOpen, onClose }: ThemeSettingsDialogProp
         <div className="flex justify-end px-4 py-3 border-t border-border bg-muted">
           <button
             onClick={onClose}
-            className="px-4 py-1.5 text-sm gradient-button text-primary-foreground rounded shadow-button hover:opacity-90 transition-opacity"
+            className="px-4 py-1.5 text-sm gradient text-primary-foreground rounded shadow-button hover:opacity-90 transition-opacity"
           >
             Готово
           </button>

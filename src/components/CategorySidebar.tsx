@@ -67,7 +67,7 @@ export function CategorySidebar({ categories, selectedId, onSelect, onAdd, onDel
           className={cn(
             "w-full flex items-center gap-2 px-2 py-1.5 rounded text-sm text-left transition-colors",
             selectedId === null
-              ? "bg-primary text-primary-foreground"
+              ? "gradient text-primary-foreground"
               : "hover:bg-pink-soft text-foreground"
           )}
         >
@@ -89,7 +89,7 @@ export function CategorySidebar({ categories, selectedId, onSelect, onAdd, onDel
                 className={cn(
                   "w-full flex items-center gap-2 px-2 py-1.5 rounded text-sm text-left transition-colors",
                   isSelected
-                    ? "bg-primary text-primary-foreground"
+                    ? "gradient text-primary-foreground"
                     : "hover:bg-pink-soft text-foreground"
                 )}
               >

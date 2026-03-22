@@ -61,7 +61,7 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-background overflow-hidden border-2 border-pink-medium/50 rounded-lg shadow-card">
+    <div className="flex flex-col h-screen bg-background overflow-hidden border-2 border-border rounded-lg shadow-card">
       {/* Background image */}
       {backgroundImage && (
         <div
@@ -75,7 +75,7 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
       )}
 
       {/* Title bar */}
-      <div className="relative titlebar flex items-center justify-between px-3 py-1.5 gradient-button">
+      <div className="relative titlebar flex items-center justify-between px-3 py-1.5 gradient">
         <div className="flex items-center gap-2">
           {icon && <span className="text-primary-foreground">{icon}</span>}
           <span className="text-sm font-bold text-primary-foreground">{title}</span>

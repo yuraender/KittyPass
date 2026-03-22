@@ -58,7 +58,7 @@ export function PasswordTable({ passwords, onAdd, onEdit, onDelete }: PasswordTa
         <div className="flex items-center gap-2">
           <button
             onClick={onAdd}
-            className="flex items-center gap-1.5 px-3 py-1.5 gradient-button text-primary-foreground rounded text-sm font-medium shadow-button hover:opacity-90 transition-opacity"
+            className="flex items-center gap-1.5 px-3 py-1.5 gradient text-primary-foreground rounded text-sm font-medium shadow-button hover:opacity-90 transition-opacity"
           >
             <Plus className="w-4 h-4" />
             Добавить

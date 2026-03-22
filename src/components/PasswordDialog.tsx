@@ -77,9 +77,9 @@ export function PasswordDialog({
       <div className="absolute inset-0 bg-foreground/30" onClick={onClose} />
 
       {/* Dialog */}
-      <div className="relative w-full max-w-md bg-card border-2 border-pink-medium/50 rounded-lg shadow-card overflow-hidden">
+      <div className="relative w-full max-w-md bg-card border-2 border-border rounded-lg shadow-card overflow-hidden">
         {/* Title bar */}
-        <div className="flex items-center justify-between px-3 py-1.5 gradient-button">
+        <div className="flex items-center justify-between px-3 py-1.5 gradient">
           <span className="text-sm font-bold text-primary-foreground">
             {initialData ? "Редактировать запись" : "Новая запись"}
           </span>
@@ -205,7 +205,7 @@ export function PasswordDialog({
             </button>
             <button
               type="submit"
-              className="px-4 py-2 text-sm rounded gradient-button text-primary-foreground shadow-button hover:opacity-90 transition-opacity font-medium"
+              className="px-4 py-2 text-sm rounded gradient text-primary-foreground shadow-button hover:opacity-90 transition-opacity font-medium"
             >
               {initialData ? "Сохранить" : "Добавить"}
             </button>

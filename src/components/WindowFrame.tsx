@@ -1,6 +1,6 @@
-import { Minus, Square, X } from "lucide-react";
-import { ReactNode, useState } from "react";
-import { useTheme } from "@/contexts/ThemeContext";
+import { Minus, Square, X, ChevronRight } from "lucide-react";
+import { ReactNode, useState, useRef, useEffect } from "react";
+import { useTheme, themePresets } from "@/contexts/ThemeContext";
 import { ThemeSettingsDialog } from "@/components/ThemeSettingsDialog";
 import { toast } from "sonner";
 
@@ -11,9 +11,24 @@ interface WindowFrameProps {
 }
 
 export function WindowFrame({ title, icon, children }: WindowFrameProps) {
-  const [themeOpen, setThemeOpen] = useState(false);
-  const { backgroundImage, backgroundOpacity } = useTheme();
   const [isImporting, setIsImporting] = useState(false);
+  const [viewMenuOpen, setViewMenuOpen] = useState(false);
+  const [themeOpen, setThemeOpen] = useState(false);
+  const [themesSubOpen, setThemesSubOpen] = useState(false);
+  const { currentTheme, setTheme, backgroundImage, backgroundOpacity } = useTheme();
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setViewMenuOpen(false);
+        setThemesSubOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
   const handleExport = async () => {
     const result = await window.electronAPI.exportData();
     if (result.canceled)
@@ -44,6 +59,7 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
     }
     setIsImporting(false);
   };
+
   return (
     <div className="flex flex-col h-screen bg-background overflow-hidden border-2 border-pink-medium/50 rounded-lg shadow-card">
       {/* Background image */}
@@ -84,15 +100,16 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
       </div>
 
       {/* Menu bar */}
-      <div className="relative flex items-center gap-1 px-2 py-1 bg-muted border-b border-border text-sm">
+      <div className="relative z-20 flex items-center gap-1 px-2 py-1 bg-muted border-b border-border text-sm">
         <div className="relative group">
           <button className="px-3 py-0.5 hover:bg-pink-soft rounded text-foreground font-medium">
             Файл
           </button>
           {/* Dropdown меню */}
           <div className="absolute hidden group-hover:block pt-1 z-50">
-            <div className="bg-popover border border-border rounded-md shadow-lg py-1 w-48 text-sm"
-                style={{ backgroundColor: "hsl(var(--card))" }}>
+            <div
+              className="bg-popover border border-border rounded-md shadow-lg py-1 w-48 text-sm"
+              style={{ backgroundColor: "hsl(var(--card))" }}>
               <button
                 onClick={handleExport}
                 className="w-full text-left px-4 py-2 hover:bg-accent hover:text-accent-foreground transition-colors"
@@ -110,12 +127,77 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
           </div>
         </div>
         <button className="px-2 py-0.5 hover:bg-pink-soft rounded text-foreground">Правка</button>
-        <button
-          onClick={() => setThemeOpen(true)}
-          className="px-2 py-0.5 hover:bg-pink-soft rounded text-foreground"
-        >
-          Вид
-        </button>
+        <div className="relative" ref={menuRef}>
+          <button
+            onClick={() => { setViewMenuOpen((v) => !v); setThemesSubOpen(false); }}
+            className={`px-2 py-0.5 rounded text-foreground ${viewMenuOpen ? "bg-pink-soft" : "hover:bg-pink-soft"}`}
+          >
+            Вид
+          </button>
+          {viewMenuOpen && (
+            <div
+              className="absolute left-0 top-full mt-0.5 w-52 bg-popover border border-border rounded shadow-card py-1 text-sm hover:bg-accent transition-colors"
+              style={{ backgroundColor: "hsl(var(--card))" }}>
+              {/* Themes submenu */}
+              <div
+                className="relative"
+                onMouseEnter={() => setThemesSubOpen(true)}
+                onMouseLeave={() => setThemesSubOpen(false)}
+              >
+                <button className="w-full flex items-center justify-between px-3 py-1.5 hover:bg-accent hover:text-accent-foreground transition-colors">
+                <span>🎨 Темы</span>
+                <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
+                </button>
+
+                {themesSubOpen && (
+                <div
+                  className="absolute left-full top-0 w-48 bg-popover border border-border rounded shadow-card py-1"
+                  style={{ backgroundColor: "hsl(var(--card))" }}>
+                  {themePresets.map((preset) => (
+                    <button
+                      key={preset.id}
+                      onClick={() => {
+                        setTheme(preset.id);
+                        setViewMenuOpen(false);
+                        setThemesSubOpen(false);
+                      }}
+                      className="w-full flex items-center gap-2 px-3 py-1.5 hover:bg-accent hover:text-accent-foreground transition-colors"
+                    >
+                      <div
+                        className="w-3.5 h-3.5 rounded-full border border-border flex-shrink-0"
+                        style={{ background: `hsl(${preset.colors.primary})` }}
+                      />
+                      <span>{preset.emoji} {preset.name}</span>
+                      {currentTheme.id === preset.id && (
+                        <span className="ml-auto text-primary">✓</span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+                )}
+              </div>
+              <div className="h-px bg-border my-1" />
+              <button
+                onClick={() => {
+                setThemeOpen(true);
+                setViewMenuOpen(false);
+                }}
+                className="w-full flex items-center gap-2 px-3 py-1.5 hover:bg-accent hover:text-accent-foreground transition-colors"
+              >
+                <span>⚙️ Настроить тему</span>
+              </button>
+              <button
+                onClick={() => {
+                setViewMenuOpen(false);
+                setThemeOpen(true);
+                }}
+                className="w-full flex items-center gap-2 px-3 py-1.5 hover:bg-accent hover:text-accent-foreground transition-colors"
+              >
+                <span>🖼 Фон</span>
+              </button>
+            </div>
+          )}
+        </div>
         <button className="px-2 py-0.5 hover:bg-pink-soft rounded text-foreground">Помощь</button>
       </div>
 

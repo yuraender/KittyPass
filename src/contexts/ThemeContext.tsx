@@ -211,6 +211,7 @@ export const themePresets: ThemePreset[] = [
 interface ThemeContextType {
   currentTheme: ThemePreset;
   setTheme: (id: string) => void;
+  setCustomColors: (colors: Record<string, string>) => void;
   backgroundImage: string | null;
   setBackgroundImage: (url: string | null) => void;
   backgroundOpacity: number;
@@ -258,10 +259,30 @@ function applyTheme(theme: ThemePreset) {
   root.style.setProperty("--shadow-button", c.shadowButton);
 }
 
+const cssVarMap: Record<string, string> = {
+  primary: "--primary",
+  secondary: "--secondary",
+  foreground: "--foreground",
+  accent: "--accent",
+  background: "--background",
+  muted: "--muted",
+  card: "--card",
+  border: "--border",
+};
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [currentTheme, setCurrentTheme] = useState<ThemePreset>(() => {
     const saved = localStorage.getItem("theme-id");
-    return themePresets.find((t) => t.id === saved) || themePresets[0];
+    const base = themePresets.find((t) => t.id === saved) || themePresets[0];
+    const customStr = localStorage.getItem("custom-colors");
+    if (customStr) {
+      try {
+        const custom = JSON.parse(customStr);
+        return { ...base, colors: { ...base.colors, ...custom } };
+      } catch {
+      }
+    }
+    return base;
   });
   const [backgroundImage, setBackgroundImage] = useState<string | null>(() => {
     const saved = localStorage.getItem("bg-image");
@@ -291,12 +312,40 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const setTheme = (id: string) => {
     const preset = themePresets.find((t) => t.id === id);
-    if (preset) setCurrentTheme(preset);
+    if (preset) {
+      setCurrentTheme(preset);
+      localStorage.removeItem("custom-colors");
+    }
+  };
+  const setCustomColors = (colors: Record<string, string>) => {
+    const root = document.documentElement;
+    for (const [key, value] of Object.entries(colors)) {
+      const cssVar = cssVarMap[key];
+      if (cssVar) root.style.setProperty(cssVar, value);
+    }
+    setCurrentTheme((prev) => {
+      const updated = { ...prev, colors: { ...prev.colors, ...colors } };
+      const basePreset = themePresets.find((t) => t.id === prev.id);
+      if (basePreset) {
+        const overrides: Record<string, string> = {};
+        for (const [k, v] of Object.entries(updated.colors)) {
+          if ((basePreset.colors as Record<string, string>)[k] !== v) {
+            overrides[k] = v;
+          }
+        }
+        if (Object.keys(overrides).length > 0) {
+          localStorage.setItem("custom-colors", JSON.stringify(overrides));
+        } else {
+          localStorage.removeItem("custom-colors");
+        }
+      }
+      return updated;
+    });
   };
 
   return (
     <ThemeContext.Provider
-      value={{ currentTheme, setTheme, backgroundImage, setBackgroundImage, backgroundOpacity, setBackgroundOpacity }}
+      value={{ currentTheme, setTheme, setCustomColors, backgroundImage, setBackgroundImage, backgroundOpacity, setBackgroundOpacity }}
     >
       {children}
     </ThemeContext.Provider>

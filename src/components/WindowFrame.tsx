@@ -11,16 +11,20 @@ interface WindowFrameProps {
 }
 
 export function WindowFrame({ title, icon, children }: WindowFrameProps) {
-  const [isImporting, setIsImporting] = useState(false);
+  const [fileMenuOpen, setFileMenuOpen] = useState(false);
   const [viewMenuOpen, setViewMenuOpen] = useState(false);
   const [themeOpen, setThemeOpen] = useState(false);
   const [themesSubOpen, setThemesSubOpen] = useState(false);
   const { currentTheme, setTheme, backgroundImage, backgroundOpacity } = useTheme();
-  const menuRef = useRef<HTMLDivElement>(null);
+  const fileMenuRef = useRef<HTMLDivElement>(null);
+  const viewMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+      if (fileMenuRef.current && !fileMenuRef.current.contains(e.target as Node)) {
+        setFileMenuOpen(false);
+      }
+      if (viewMenuRef.current && !viewMenuRef.current.contains(e.target as Node)) {
         setViewMenuOpen(false);
         setThemesSubOpen(false);
       }
@@ -42,12 +46,8 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
     }
   };
   const handleImport = async () => {
-    if (isImporting)
-      return;
-    setIsImporting(true);
     const result = await window.electronAPI.importData();
     if (result.canceled) {
-      setIsImporting(false);
       return;
     }
     if (result.success) {
@@ -57,7 +57,6 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
         description: result.error || "Неизвестная ошибка"
       });
     }
-    setIsImporting(false);
   };
 
   return (
@@ -101,39 +100,48 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
 
       {/* Menu bar */}
       <div className="relative z-20 flex items-center gap-1 px-2 py-1 bg-muted border-b border-border text-sm">
-        <div className="relative group">
-          <button className="px-3 py-0.5 hover:bg-pink-soft rounded text-foreground font-medium">
+        <div className="relative" ref={fileMenuRef}>
+          <button
+            onClick={() => setFileMenuOpen((v) => !v) }
+            className={`px-2 py-0.5 rounded text-foreground ${fileMenuOpen ? "bg-pink-soft" : "hover:bg-pink-soft"}`}
+          >
             Файл
           </button>
           {/* Dropdown меню */}
-          <div className="absolute hidden group-hover:block pt-1 z-50">
+          {fileMenuOpen && (
             <div
-              className="bg-popover border border-border rounded-md shadow-lg py-1 w-48 text-sm"
+              className="absolute left-0 top-full mt-0.5 w-52 bg-popover border border-border rounded shadow-card py-1 text-sm hover:bg-accent transition-colors"
               style={{ backgroundColor: "hsl(var(--card))" }}>
               <button
-                onClick={handleExport}
-                className="w-full text-left px-4 py-2 hover:bg-accent hover:text-accent-foreground transition-colors"
+                onClick={() => {
+                    setFileMenuOpen(false);
+                    handleExport();
+                }}
+                className="w-full flex items-center gap-2 px-3 py-1.5 hover:bg-accent hover:text-accent-foreground transition-colors"
               >
-                Экспорт данных
+                <span>Экспорт данных</span>
               </button>
               <button
-                onClick={handleImport}
-                disabled={isImporting}
-                className="w-full text-left px-4 py-2 hover:bg-accent hover:text-accent-foreground transition-colors disabled:opacity-50"
+                onClick={() => {
+                    setFileMenuOpen(false);
+                    handleImport();
+                }}
+                className="w-full flex items-center gap-2 px-3 py-1.5 hover:bg-accent hover:text-accent-foreground transition-colors"
               >
-                Импорт данных
+                <span>Импорт данных</span>
               </button>
             </div>
-          </div>
+          )}
         </div>
         <button className="px-2 py-0.5 hover:bg-pink-soft rounded text-foreground">Правка</button>
-        <div className="relative" ref={menuRef}>
+        <div className="relative" ref={viewMenuRef}>
           <button
             onClick={() => { setViewMenuOpen((v) => !v); setThemesSubOpen(false); }}
             className={`px-2 py-0.5 rounded text-foreground ${viewMenuOpen ? "bg-pink-soft" : "hover:bg-pink-soft"}`}
           >
             Вид
           </button>
+          {/* Dropdown меню */}
           {viewMenuOpen && (
             <div
               className="absolute left-0 top-full mt-0.5 w-52 bg-popover border border-border rounded shadow-card py-1 text-sm hover:bg-accent transition-colors"
@@ -179,8 +187,8 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
               <div className="h-px bg-border my-1" />
               <button
                 onClick={() => {
-                setThemeOpen(true);
-                setViewMenuOpen(false);
+                    setViewMenuOpen(false);
+                    setThemeOpen(true);
                 }}
                 className="w-full flex items-center gap-2 px-3 py-1.5 hover:bg-accent hover:text-accent-foreground transition-colors"
               >
@@ -188,8 +196,8 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
               </button>
               <button
                 onClick={() => {
-                setViewMenuOpen(false);
-                setThemeOpen(true);
+                    setViewMenuOpen(false);
+                    setThemeOpen(true);
                 }}
                 className="w-full flex items-center gap-2 px-3 py-1.5 hover:bg-accent hover:text-accent-foreground transition-colors"
               >

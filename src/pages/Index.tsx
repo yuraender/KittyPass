@@ -115,9 +115,9 @@ export default function Index() {
 
       {/* Password editing dialog */}
       <div className={cn(
-        "fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 transition-all duration-200",
+        "fixed z-50 flex items-center justify-center bg-foreground/30 transition-all duration-200",
         isDialogOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
-      )}>
+      )} style={{ inset: "33px 0 0 0" }}>
         <PasswordDialog
           isOpen={isDialogOpen}
           onClose={() => setIsDialogOpen(false)}

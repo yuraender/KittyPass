@@ -81,10 +81,6 @@
   .password td {
     user-select: text;
   }
-
-  .bg-muted\/40 {
-    background-color: hsl(var(--background) / 0.4);
-  }
 }
 
 @layer base {

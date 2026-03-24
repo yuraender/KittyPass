@@ -69,7 +69,7 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
         className="absolute inset-0 bg-cover bg-no-repeat pointer-events-none z-10"
         style={{
           backgroundImage: `url(${backgroundImage})`,
-          backgroundPosition: "center 66px",
+          backgroundPosition: "center 65px",
           opacity: backgroundOpacity,
         }}
         />
@@ -229,9 +229,9 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
       </div>
 
       <div className={cn(
-        "fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 transition-all duration-200",
+        "fixed z-50 flex items-center justify-center bg-foreground/30 transition-all duration-200",
         themeOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
-      )}>
+      )} style={{ inset: "33px 0 0 0" }}>
         <ThemeSettingsDialog isOpen={themeOpen} onClose={() => setThemeOpen(false)} initialTab={themeTab} />
       </div>
     </div>

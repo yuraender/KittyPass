@@ -81,6 +81,13 @@ export function ThemeSettingsDialog({ isOpen, onClose, initialTab }: ThemeSettin
   useEffect(() => {
     if (!isOpen)
       return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+
     setActiveTab(initialTab);
     const colors: Record<string, string> = {};
     for (const field of editableColors) {
@@ -88,6 +95,10 @@ export function ThemeSettingsDialog({ isOpen, onClose, initialTab }: ThemeSettin
       colors[field.key] = val || "";
     }
     setLocalColors(colors);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, [isOpen, currentTheme, initialTab]);
 
   if (!isOpen)

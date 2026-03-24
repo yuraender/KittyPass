@@ -190,7 +190,9 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
                 onClick={() => {
                     setViewMenuOpen(false);
                     setThemeTab("colors");
-                    setThemeOpen(true);
+                    setTimeout(() => {
+                      setThemeOpen(true);
+                    }, 10);
                 }}
                 className="w-full flex items-center gap-2 px-3 py-1.5 hover:bg-accent hover:text-accent-foreground transition-colors"
               >
@@ -200,7 +202,9 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
                 onClick={() => {
                     setViewMenuOpen(false);
                     setThemeTab("background");
-                    setThemeOpen(true);
+                    setTimeout(() => {
+                      setThemeOpen(true);
+                    }, 10);
                 }}
                 className="w-full flex items-center gap-2 px-3 py-1.5 hover:bg-accent hover:text-accent-foreground transition-colors"
               >

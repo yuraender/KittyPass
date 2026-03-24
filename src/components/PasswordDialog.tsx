@@ -28,6 +28,15 @@ export function PasswordDialog({
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
+    if (!isOpen)
+      return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+
     if (initialData) {
       setTitle(initialData.title);
       setUsername(initialData.username);
@@ -42,6 +51,10 @@ export function PasswordDialog({
       setCategoryId(selectedCategoryId);
     }
     setShowPassword(false);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, [initialData, selectedCategoryId, isOpen]);
 
   const generatePassword = () => {

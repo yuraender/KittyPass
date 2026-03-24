@@ -6,6 +6,7 @@ import { useTheme, themePresets } from "@/contexts/ThemeContext";
 interface ThemeSettingsDialogProps {
   isOpen: boolean;
   onClose: () => void;
+  initialTab?: "colors" | "background";
 }
 
 const bgPresets = [
@@ -71,22 +72,23 @@ function hexToHslString(hex: string): string {
   return `${Math.round(h)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
 }
 
-export function ThemeSettingsDialog({ isOpen, onClose }: ThemeSettingsDialogProps) {
+export function ThemeSettingsDialog({ isOpen, onClose, initialTab }: ThemeSettingsDialogProps) {
   const { currentTheme, setTheme, setCustomColors, backgroundImage, setBackgroundImage, backgroundOpacity, setBackgroundOpacity } = useTheme();
   const [customUrl, setCustomUrl] = useState("");
   const [localColors, setLocalColors] = useState<Record<string, string>>({});
-  const [activeTab, setActiveTab] = useState<"colors" | "background">("colors");
+  const [activeTab, setActiveTab] = useState<"colors" | "background">(initialTab);
 
   useEffect(() => {
     if (!isOpen)
       return;
+    setActiveTab(initialTab);
     const colors: Record<string, string> = {};
     for (const field of editableColors) {
       const val = (currentTheme.colors as Record<string, string>)[field.key];
       colors[field.key] = val || "";
     }
     setLocalColors(colors);
-  }, [isOpen, currentTheme]);
+  }, [isOpen, currentTheme, initialTab]);
 
   if (!isOpen)
     return null;
@@ -136,7 +138,7 @@ export function ThemeSettingsDialog({ isOpen, onClose }: ThemeSettingsDialogProp
               activeTab === "colors" ? "bg-card text-foreground border-b-2 border-primary" : "text-muted-foreground hover:text-foreground"
             )}
           >
-            🎨 Цвета
+            🖌️ Цвета
           </button>
           <button
             onClick={() => setActiveTab("background")}

@@ -13,6 +13,7 @@ interface WindowFrameProps {
 export function WindowFrame({ title, icon, children }: WindowFrameProps) {
   const [fileMenuOpen, setFileMenuOpen] = useState(false);
   const [viewMenuOpen, setViewMenuOpen] = useState(false);
+  const [themeTab, setThemeTab] = useState<"colors" | "background">("colors");
   const [themeOpen, setThemeOpen] = useState(false);
   const [themesSubOpen, setThemesSubOpen] = useState(false);
   const { currentTheme, setTheme, backgroundImage, backgroundOpacity } = useTheme();
@@ -188,20 +189,22 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
               <button
                 onClick={() => {
                     setViewMenuOpen(false);
+                    setThemeTab("colors");
                     setThemeOpen(true);
                 }}
                 className="w-full flex items-center gap-2 px-3 py-1.5 hover:bg-accent hover:text-accent-foreground transition-colors"
               >
-                <span>⚙️ Настроить тему</span>
+                <span>🖌️ Цвета</span>
               </button>
               <button
                 onClick={() => {
                     setViewMenuOpen(false);
+                    setThemeTab("background");
                     setThemeOpen(true);
                 }}
                 className="w-full flex items-center gap-2 px-3 py-1.5 hover:bg-accent hover:text-accent-foreground transition-colors"
               >
-                <span>🖼 Фон</span>
+                <span>🖼️ Фон</span>
               </button>
             </div>
           )}
@@ -220,7 +223,7 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
         <span>KittyPass v1.0.0</span>
       </div>
 
-      <ThemeSettingsDialog isOpen={themeOpen} onClose={() => setThemeOpen(false)} />
+      <ThemeSettingsDialog isOpen={themeOpen} onClose={() => setThemeOpen(false)} initialTab={themeTab} />
     </div>
   );
 }

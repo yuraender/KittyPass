@@ -3,6 +3,7 @@ import { ReactNode, useState, useRef, useEffect } from "react";
 import { useTheme, themePresets } from "@/contexts/ThemeContext";
 import { ThemeSettingsDialog } from "@/components/ThemeSettingsDialog";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 interface WindowFrameProps {
   title: string;
@@ -227,7 +228,12 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
         <span>KittyPass v1.0.0</span>
       </div>
 
-      <ThemeSettingsDialog isOpen={themeOpen} onClose={() => setThemeOpen(false)} initialTab={themeTab} />
+      <div className={cn(
+        "fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 transition-all duration-200",
+        themeOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
+      )}>
+        <ThemeSettingsDialog isOpen={themeOpen} onClose={() => setThemeOpen(false)} initialTab={themeTab} />
+      </div>
     </div>
   );
 }

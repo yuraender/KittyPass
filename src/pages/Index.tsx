@@ -4,6 +4,7 @@ import { WindowFrame } from "@/components/WindowFrame";
 import { CategorySidebar, Category } from "@/components/CategorySidebar";
 import { PasswordTable, PasswordEntry } from "@/components/PasswordTable";
 import { PasswordDialog } from "@/components/PasswordDialog";
+import { cn } from "@/lib/utils";
 
 const electronAPI = (window as any).electronAPI;
 
@@ -113,14 +114,19 @@ export default function Index() {
       </div>
 
       {/* Password editing dialog */}
-      <PasswordDialog
-        isOpen={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
-        onSave={handleSavePassword}
-        categories={categories}
-        initialData={editingPassword}
-        selectedCategoryId={selectedCategoryId}
-      />
+      <div className={cn(
+        "fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 transition-all duration-200",
+        isDialogOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
+      )}>
+        <PasswordDialog
+          isOpen={isDialogOpen}
+          onClose={() => setIsDialogOpen(false)}
+          onSave={handleSavePassword}
+          categories={categories}
+          initialData={editingPassword}
+          selectedCategoryId={selectedCategoryId}
+        />
+      </div>
     </WindowFrame>
   );
 }

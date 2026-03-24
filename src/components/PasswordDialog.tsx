@@ -82,12 +82,13 @@ export function PasswordDialog({
     onClose();
   };
 
-  if (!isOpen) return null;
+  if (!isOpen)
+    return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-foreground/30" onClick={onClose} />
+      <div className="absolute inset-0" onClick={onClose} />
 
       {/* Dialog */}
       <div className="relative w-full max-w-md bg-card border-2 border-border rounded-lg shadow-card overflow-hidden">

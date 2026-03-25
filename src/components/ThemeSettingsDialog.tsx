@@ -131,8 +131,8 @@ export function ThemeSettingsDialog({ isOpen, onClose, initialTab }: ThemeSettin
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0" onClick={onClose} />
-      <div className="w-[520px] max-h-[80vh] bg-card border-2 border-border rounded-lg shadow-card overflow-hidden flex flex-col">
+      <div className="absolute inset-0 bg-foreground/30" onClick={onClose} />
+      <div className="relative w-[520px] max-h-[80vh] bg-card border-2 border-border rounded-lg shadow-card overflow-hidden">
         {/* Title bar */}
         <div className="flex items-center justify-between px-3 py-1.5 gradient">
           <span className="text-sm font-bold text-primary-foreground">⚙️ Настройки темы</span>

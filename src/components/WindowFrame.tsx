@@ -137,7 +137,6 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
             </div>
           )}
         </div>
-        <button className="px-2 py-0.5 hover:bg-pink-soft rounded text-foreground">Правка</button>
         <div className="relative" ref={viewMenuRef}>
           <button
             onClick={() => { setViewMenuOpen((v) => !v); setThemesSubOpen(false); }}
@@ -253,12 +252,12 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
 				Выбери запись кликом, потом можно использовать кнопки
             </p>
             <div className="flex items-center justify-between py-2 px-3 rounded-md bg-muted">
-              <span className="text-sm text-foreground">Копировать пароль</span>
-              <kbd className="px-2 py-1 text-xs font-mono rounded border border-border bg-background text-foreground">Ctrl + C</kbd>
-            </div>
-            <div className="flex items-center justify-between py-2 px-3 rounded-md bg-muted">
               <span className="text-sm text-foreground">Копировать логин</span>
               <kbd className="px-2 py-1 text-xs font-mono rounded border border-border bg-background text-foreground">Ctrl + X</kbd>
+            </div>
+            <div className="flex items-center justify-between py-2 px-3 rounded-md bg-muted">
+              <span className="text-sm text-foreground">Копировать пароль</span>
+              <kbd className="px-2 py-1 text-xs font-mono rounded border border-border bg-background text-foreground">Ctrl + C</kbd>
             </div>
           </div>
         </DialogContent>

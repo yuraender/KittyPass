@@ -88,6 +88,19 @@ ipcMain.handle('importData', async () => {
   }
 });
 
+const lock = app.requestSingleInstanceLock();
+if (!lock) {
+  app.quit();
+  return;
+}
+app.on('second-instance', () => {
+  if (mainWindow) {
+    if (mainWindow.isMinimized())
+      mainWindow.restore();
+    mainWindow.focus();
+  }
+});
+
 app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {

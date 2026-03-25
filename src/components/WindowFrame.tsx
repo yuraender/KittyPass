@@ -1,7 +1,8 @@
-import { Minus, Square, X, ChevronRight } from "lucide-react";
+import { Minus, Square, X, ChevronRight, Keyboard } from "lucide-react";
 import { ReactNode, useState, useRef, useEffect } from "react";
 import { useTheme, themePresets } from "@/contexts/ThemeContext";
 import { ThemeSettingsDialog } from "@/components/ThemeSettingsDialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -18,6 +19,7 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
   const [themeOpen, setThemeOpen] = useState(false);
   const [themesSubOpen, setThemesSubOpen] = useState(false);
   const { currentTheme, setTheme, backgroundImage, backgroundOpacity } = useTheme();
+  const [helpMenuOpen, setHelpMenuOpen] = useState(false);
   const fileMenuRef = useRef<HTMLDivElement>(null);
   const viewMenuRef = useRef<HTMLDivElement>(null);
 
@@ -214,7 +216,7 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
             </div>
           )}
         </div>
-        <button className="px-2 py-0.5 hover:bg-pink-soft rounded text-foreground">Помощь</button>
+        <button onClick={() => setHelpMenuOpen(true)} className="px-2 py-0.5 hover:bg-pink-soft rounded text-foreground">Помощь</button>
       </div>
 
       {/* Content */}
@@ -234,6 +236,33 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
       )} style={{ inset: "33px 0 0 0" }}>
         <ThemeSettingsDialog isOpen={themeOpen} onClose={() => setThemeOpen(false)} initialTab={themeTab} />
       </div>
+
+      <Dialog open={helpMenuOpen} onOpenChange={setHelpMenuOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Keyboard className="w-5 h-5 text-primary" />
+              Помощь
+            </DialogTitle>
+            <DialogDescription>
+              Горячие клавиши для работы с записями
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3 pt-2">
+            <p className="text-center text-xs text-foreground pt-1">
+				Выбери запись кликом, потом можно использовать кнопки
+            </p>
+            <div className="flex items-center justify-between py-2 px-3 rounded-md bg-muted">
+              <span className="text-sm text-foreground">Копировать пароль</span>
+              <kbd className="px-2 py-1 text-xs font-mono rounded border border-border bg-background text-foreground">Ctrl + C</kbd>
+            </div>
+            <div className="flex items-center justify-between py-2 px-3 rounded-md bg-muted">
+              <span className="text-sm text-foreground">Копировать логин</span>
+              <kbd className="px-2 py-1 text-xs font-mono rounded border border-border bg-background text-foreground">Ctrl + X</kbd>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

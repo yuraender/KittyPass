@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Eye, EyeOff, Copy, Check, Pencil, Trash2, Plus, Search, X } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
 export interface PasswordEntry {
@@ -20,6 +21,7 @@ interface PasswordTableProps {
 
 export function PasswordTable({ passwords, onAdd, onEdit, onDelete }: PasswordTableProps) {
   const [visiblePasswords, setVisiblePasswords] = useState<Set<string>>(new Set());
+  const [copiedUsernameId, setCopiedUsernameId] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -43,13 +45,41 @@ export function PasswordTable({ passwords, onAdd, onEdit, onDelete }: PasswordTa
     });
   };
 
+  const copyUsername = async (id: string, username: string) => {
+    await navigator.clipboard.writeText(username);
+    setCopiedUsernameId(id);
+    setTimeout(() => setCopiedUsernameId(null), 2000);
+    toast({ title: "👤 Имя пользователя скопировано" });
+  };
+
   const copyPassword = async (id: string, password: string) => {
     await navigator.clipboard.writeText(password);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
+    toast({ title: "🔑 Пароль скопирован в буфер обмена" });
   };
 
   const maskPassword = (password: string) => "•".repeat(Math.min(password.length, 12));
+
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (!selectedId)
+      return;
+    const data = passwords.find((p) => p.id === selectedId);
+    if (!data)
+      return;
+    if (e.ctrlKey && e.key === "c") {
+      e.preventDefault();
+      copyPassword(data.id, data.password);
+    } else if (e.ctrlKey && e.key === "x") {
+      e.preventDefault();
+      copyUsername(data.id, data.username);
+    }
+  }, [selectedId, passwords]);
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [handleKeyDown]);
 
   return (
     <div className="flex flex-col h-full">
@@ -137,7 +167,24 @@ export function PasswordTable({ passwords, onAdd, onEdit, onDelete }: PasswordTa
                   )}
                 >
                   <td className="px-3 py-2 font-medium text-foreground">{entry.title}</td>
-                  <td className="px-3 py-2 text-foreground font-mono text-xs">{entry.username}</td>
+                  <td className="px-3 py-2">
+                    <div className="flex items-center gap-1">
+                      <span className="font-mono text-xs text-foreground">{entry.username}</span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          copyUsername(entry.id, entry.username);
+                        }}
+                        className="p-1 hover:bg-pink-soft rounded transition-colors"
+                      >
+                        {copiedUsernameId === entry.id ? (
+                          <Check className="w-3.5 h-3.5 text-primary" />
+                        ) : (
+                          <Copy className="w-3.5 h-3.5 text-muted-foreground" />
+                        )}
+                      </button>
+                    </div>
+                  </td>
                   <td className="px-3 py-2">
                     <div className="flex items-center gap-1">
                       <span className="font-mono text-xs text-foreground">

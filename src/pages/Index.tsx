@@ -90,7 +90,9 @@ export default function Index() {
   return (
     <WindowFrame
       title="KittyPass - Менеджер паролей"
-      icon={<Shield className="w-4 h-4" />}
+      icon={
+        <img src="favicon.ico" className="w-4 h-4" />
+      }
     >
       <div className="flex h-full">
         {/* Sidebar */}

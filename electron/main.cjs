@@ -11,6 +11,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 900,
     height: 650,
+    icon: path.join(__dirname, '../src/assets/icon.png'),
     frame: false,
     backgroundColor: '#1e1e1e',
     webPreferences: {

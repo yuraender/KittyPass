@@ -15,6 +15,7 @@
   "build": {
     "appId": "ru.yuraender.kittypass",
     "productName": "KittyPass",
+    "icon": "src/assets/icon",
     "directories": {
       "output": "dist-electron"
     },

@@ -1,19 +1,19 @@
 /// <reference types="vite/client" />
 
 interface Category {
-  id: number | string;
+  id: number;
   name: string;
   icon: string;
-  isSystem?: boolean;
+  is_system: boolean;
 }
 
 interface PasswordEntry {
-  id: number | string;
+  id: number;
   title: string;
   username: string;
   password: string;
-  description?: string;
-  categoryId?: string | null;
+  description: string | null;
+  category_id: number | null;
 }
 
 interface ElectronAPI {
@@ -24,14 +24,14 @@ interface ElectronAPI {
 
   // Categories
   getCategories: () => Promise<Category[]>;
-  addCategory: (data: { name: string; icon?: string, isSystem: number = 0 }) => Promise<Category>;
-  removeCategory: (id: number | string) => Promise<void>;
+  addCategory: (data: { name: string; icon?: string = 'folder', is_system?: number = 0 }) => Promise<Category>;
+  removeCategory: (id: number) => Promise<void>;
 
   // Passwords
-  getPasswords: (categoryId?: number | string | null) => Promise<PasswordEntry[]>;
-  addPassword: (pwd: PasswordEntry) => Promise<{ id: number | string }>;
+  getPasswords: (categoryId?: number | null) => Promise<PasswordEntry[]>;
+  addPassword: (pwd: PasswordEntry) => Promise<{ id: number }>;
   updatePassword: (pwd: PasswordEntry) => Promise<void>;
-  removePassword: (id: number | string) => Promise<void>;
+  removePassword: (id: number) => Promise<void>;
 
   // Export/import
   exportData: () => Promise<void>;

@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS categories (
 CREATE TABLE IF NOT EXISTS passwords (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   title TEXT NOT NULL,
-  username TEXT,
+  username TEXT NOT NULL,
   password TEXT NOT NULL,
   description TEXT,
   category_id INTEGER,

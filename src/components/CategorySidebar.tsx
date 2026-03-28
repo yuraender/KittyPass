@@ -3,18 +3,18 @@ import { Folder, FolderOpen, Plus, Trash2, MessageCircleMore, Gamepad2, Shopping
 import { cn } from "@/lib/utils";
 
 export interface Category {
-  id: number | string;
+  id: number;
   name: string;
   icon: "message_circle_more" | "gamepad" | "shopping" | "folder";
-  is_system?: boolean;
+  is_system: boolean;
 }
 
 interface CategorySidebarProps {
   categories: Category[];
-  selectedId: string | null;
-  onSelect: (id: string | null) => void;
+  selectedId: number | null;
+  onSelect: (id: number | null) => void;
   onAdd: (name: string) => void;
-  onDelete: (id: string) => void;
+  onDelete: (id: number) => void;
 }
 
 const iconMap = {
@@ -81,7 +81,6 @@ export function CategorySidebar({ categories, selectedId, onSelect, onAdd, onDel
         {categories.map((cat) => {
           const Icon = iconMap[cat.icon] || Folder;
           const isSelected = selectedId === cat.id;
-
           return (
             <div key={cat.id} className="group relative">
               <button

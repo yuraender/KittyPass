@@ -17,7 +17,7 @@ const systemCategories: Category[] = [
 
 export default function Index() {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
   const [passwords, setPasswords] = useState<PasswordEntry[]>([]);
   const [editingPassword, setEditingPassword] = useState<PasswordEntry | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -30,7 +30,7 @@ export default function Index() {
         const created = await electronAPI.addCategory({
           name: cat.name,
           icon: cat.icon,
-          isSystem: 1,
+          is_system: 1,
         });
       }
       cats = await electronAPI.getCategories();
@@ -38,12 +38,12 @@ export default function Index() {
     setCategories(cats);
   };
 
-  const handleAddCategory = async (name: string) => {
-    await electronAPI.addCategory({ name, icon: 'folder' });
+  const handleAddCategory = async (name: number) => {
+    await electronAPI.addCategory({ name });
     loadCategories();
   };
 
-  const handleDeleteCategory = async (id: string) => {
+  const handleDeleteCategory = async (id: number) => {
     await electronAPI.removeCategory(id);
     loadCategories();
     if (selectedCategoryId === id) {
@@ -52,7 +52,7 @@ export default function Index() {
   };
 
   // Password handlers
-  const loadPasswords = async (categoryId: string | null = null) => {
+  const loadPasswords = async (categoryId: number | null = null) => {
     const passwords = await electronAPI.getPasswords(categoryId);
     setPasswords(passwords);
   };
@@ -71,12 +71,12 @@ export default function Index() {
     setIsDialogOpen(true);
   };
 
-  const handleDeletePassword = async (id: string) => {
+  const handleDeletePassword = async (id: number) => {
     await electronAPI.removePassword(id);
     loadPasswords(selectedCategoryId);
   };
 
-  const handleSavePassword = async (data: Omit<PasswordEntry, "id"> & { id?: string }) => {
+  const handleSavePassword = async (data: Omit<PasswordEntry, "id"> & { id?: number }) => {
     if (data.id) {
       // Update existing
       await electronAPI.updatePassword(data);

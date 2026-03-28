@@ -6,10 +6,10 @@ import { Category } from "./CategorySidebar";
 interface PasswordDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (data: Omit<PasswordEntry, "id"> & { id?: string }) => void;
+  onSave: (data: Omit<PasswordEntry, "id"> & { id?: number }) => void;
   categories: Category[];
   initialData?: PasswordEntry | null;
-  selectedCategoryId: string | null;
+  selectedCategoryId: number | null;
 }
 
 export function PasswordDialog({
@@ -24,7 +24,7 @@ export function PasswordDialog({
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [description, setDescription] = useState("");
-  const [categoryId, setCategoryId] = useState<string | null>(null);
+  const [categoryId, setCategoryId] = useState<number | null>(null);
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export function PasswordDialog({
       setUsername(initialData.username);
       setPassword(initialData.password);
       setDescription(initialData.description);
-      setCategoryId(initialData.categoryId);
+      setCategoryId(initialData.category_id);
     } else {
       setTitle("");
       setUsername("");

@@ -4,36 +4,36 @@ import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
 export interface PasswordEntry {
-  id: number | string;
+  id: number;
   title: string;
   username: string;
   password: string;
-  description?: string;
-  categoryId?: string | null;
+  description: string | null;
+  category_id: number | null;
 }
 
 interface PasswordTableProps {
   passwords: PasswordEntry[];
   onAdd: () => void;
   onEdit: (password: PasswordEntry) => void;
-  onDelete: (id: string) => void;
+  onDelete: (id: number) => void;
 }
 
 export function PasswordTable({ passwords, onAdd, onEdit, onDelete }: PasswordTableProps) {
-  const [visiblePasswords, setVisiblePasswords] = useState<Set<string>>(new Set());
-  const [copiedUsernameId, setCopiedUsernameId] = useState<string | null>(null);
-  const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [visiblePasswords, setVisiblePasswords] = useState<Set<number>>(new Set());
+  const [copiedUsernameId, setCopiedUsernameId] = useState<number | null>(null);
+  const [copiedId, setCopiedId] = useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   // Filter passwords by search
   const filteredPasswords = passwords.filter((p) =>
     p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     p.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    p.description.toLowerCase().includes(searchQuery.toLowerCase())
+    (p.description && p.description.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
-  const toggleVisibility = (id: string) => {
+  const toggleVisibility = (id: number) => {
     setVisiblePasswords((prev) => {
       const next = new Set(prev);
       if (next.has(id)) {
@@ -45,14 +45,14 @@ export function PasswordTable({ passwords, onAdd, onEdit, onDelete }: PasswordTa
     });
   };
 
-  const copyUsername = async (id: string, username: string) => {
+  const copyUsername = async (id: number, username: string) => {
     await navigator.clipboard.writeText(username);
     setCopiedUsernameId(id);
     setTimeout(() => setCopiedUsernameId(null), 2000);
     toast({ title: "👤 Имя пользователя скопировано" });
   };
 
-  const copyPassword = async (id: string, password: string) => {
+  const copyPassword = async (id: number, password: string) => {
     await navigator.clipboard.writeText(password);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);

@@ -44,7 +44,7 @@ ipcMain.on('window-close', (event) => {
   BrowserWindow.fromWebContents(event.sender).close();
 });
 ipcMain.handle('get-categories', () => db.getCategories());
-ipcMain.handle('add-category', (event, { name, icon, isSystem }) => db.addCategory(name, icon, isSystem));
+ipcMain.handle('add-category', (event, { name, icon, is_system }) => db.addCategory(name, icon, is_system));
 ipcMain.handle('remove-category', (event, id) => db.removeCategory(id));
 ipcMain.handle('get-passwords', (event, categoryId) => db.getPasswords(categoryId));
 ipcMain.handle('add-password', (event, password) => db.addPassword(password));

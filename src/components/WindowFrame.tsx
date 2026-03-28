@@ -226,7 +226,7 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
       {/* Status bar */}
       <div className="relative flex items-center justify-between px-3 py-1 bg-muted border-t border-border text-xs text-muted-foreground">
         <span></span>
-        <span>KittyPass v1.0.0</span>
+        <span>KittyPass v1.0.1-dev</span>
       </div>
 
       <div className={cn(

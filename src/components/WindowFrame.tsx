@@ -4,7 +4,6 @@ import { useTheme, themePresets } from "@/contexts/ThemeContext";
 import { ThemeSettingsDialog } from "@/components/ThemeSettingsDialog";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
 
 interface WindowFrameProps {
   title: string;
@@ -231,12 +230,7 @@ export function WindowFrame({ title, icon, reloadData, children }: WindowFramePr
         <span>KittyPass v1.0.1-dev</span>
       </div>
 
-      <div className={cn(
-        "fixed z-50 flex items-center justify-center bg-foreground/30 transition-all duration-200",
-        themeOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
-      )} style={{ inset: "33px 0 0 0" }}>
-        <ThemeSettingsDialog isOpen={themeOpen} onClose={() => setThemeOpen(false)} initialTab={themeTab} />
-      </div>
+      <ThemeSettingsDialog isOpen={themeOpen} onClose={() => setThemeOpen(false)} initialTab={themeTab} />
 
       <Dialog open={helpMenuOpen} onOpenChange={setHelpMenuOpen}>
         <DialogContent className="sm:max-w-md">

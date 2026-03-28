@@ -73,14 +73,26 @@ function hexToHslString(hex: string): string {
 }
 
 export function ThemeSettingsDialog({ isOpen, onClose, initialTab }: ThemeSettingsDialogProps) {
+  const [shouldRender, setShouldRender] = useState(isOpen);
+  const [visible, setVisible] = useState(false);
   const { currentTheme, setTheme, setCustomColors, backgroundImage, setBackgroundImage, backgroundOpacity, setBackgroundOpacity } = useTheme();
   const [customUrl, setCustomUrl] = useState("");
   const [localColors, setLocalColors] = useState<Record<string, string>>({});
   const [activeTab, setActiveTab] = useState<"colors" | "background">(initialTab);
 
   useEffect(() => {
-    if (!isOpen)
-      return;
+    if (isOpen) {
+      setShouldRender(true);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setVisible(true);
+        });
+      });
+    } else {
+      setVisible(false);
+      const timeout = setTimeout(() => setShouldRender(false), 200);
+      return () => clearTimeout(timeout);
+    }
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         onClose();
@@ -101,7 +113,7 @@ export function ThemeSettingsDialog({ isOpen, onClose, initialTab }: ThemeSettin
     };
   }, [isOpen, currentTheme, initialTab]);
 
-  if (!isOpen)
+  if (!shouldRender)
     return null;
 
   const handleCustomUrl = () => {
@@ -130,8 +142,11 @@ export function ThemeSettingsDialog({ isOpen, onClose, initialTab }: ThemeSettin
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-foreground/30" onClick={onClose} />
+    <div className={cn(
+      "fixed inset-0 z-50 flex items-center justify-center transition-all duration-200",
+      visible ? "opacity-100" : "opacity-0"
+    )}>
+      <div className="absolute inset-0 bg-black/80" onClick={onClose} />
       <div className="relative w-[520px] max-h-[80vh] bg-card border-2 border-border rounded-lg shadow-card overflow-hidden">
         {/* Title bar */}
         <div className="flex items-center justify-between px-3 py-1.5 gradient">
@@ -191,7 +206,7 @@ export function ThemeSettingsDialog({ isOpen, onClose, initialTab }: ThemeSettin
                 </div>
               </div>
 
-			  {/* Color pickers */}
+              {/* Color pickers */}
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-sm font-semibold text-foreground">Настройка цветов</h3>

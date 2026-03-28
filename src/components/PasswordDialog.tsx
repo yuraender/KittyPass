@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { X, Sparkles, Eye, EyeOff } from "lucide-react";
 import { PasswordEntry } from "./PasswordTable";
 import { Category } from "./CategorySidebar";
+import { cn } from "@/lib/utils";
 
 interface PasswordDialogProps {
   isOpen: boolean;
@@ -20,6 +21,8 @@ export function PasswordDialog({
   initialData,
   selectedCategoryId,
 }: PasswordDialogProps) {
+  const [shouldRender, setShouldRender] = useState(isOpen);
+  const [visible, setVisible] = useState(false);
   const [title, setTitle] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -28,8 +31,18 @@ export function PasswordDialog({
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    if (!isOpen)
-      return;
+    if (isOpen) {
+      setShouldRender(true);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setVisible(true);
+        });
+      });
+    } else {
+      setVisible(false);
+      const timeout = setTimeout(() => setShouldRender(false), 200);
+      return () => clearTimeout(timeout);
+    }
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         onClose();
@@ -55,7 +68,10 @@ export function PasswordDialog({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [initialData, selectedCategoryId, isOpen]);
+  }, [isOpen, initialData, selectedCategoryId]);
+
+  if (!shouldRender)
+    return null;
 
   const generatePassword = () => {
     const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%&*_";
@@ -82,13 +98,13 @@ export function PasswordDialog({
     onClose();
   };
 
-  if (!isOpen)
-    return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className={cn(
+      "fixed inset-0 z-50 flex items-center justify-center transition-all duration-200",
+      visible ? "opacity-100" : "opacity-0"
+    )}>
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-foreground/30" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/80" onClick={onClose} />
 
       {/* Dialog */}
       <div className="relative w-full max-w-md bg-card border-2 border-border rounded-lg shadow-card overflow-hidden">
@@ -134,7 +150,7 @@ export function PasswordDialog({
             >
               <option value="">-</option>
               {categories.map((cat) => (
-                <option key={cat.id} value={cat.id} selected={categoryId !== null && String(categoryId) === String(cat.id)}>
+                <option key={cat.id} value={cat.id}>
                   {cat.name}
                 </option>
               ))}

@@ -9,10 +9,11 @@ import { cn } from "@/lib/utils";
 interface WindowFrameProps {
   title: string;
   icon?: ReactNode;
+  reloadData: () => void;
   children: ReactNode;
 }
 
-export function WindowFrame({ title, icon, children }: WindowFrameProps) {
+export function WindowFrame({ title, icon, reloadData, children }: WindowFrameProps) {
   const [fileMenuOpen, setFileMenuOpen] = useState(false);
   const [viewMenuOpen, setViewMenuOpen] = useState(false);
   const [themeTab, setThemeTab] = useState<"colors" | "background">("colors");
@@ -56,6 +57,7 @@ export function WindowFrame({ title, icon, children }: WindowFrameProps) {
     }
     if (result.success) {
       toast.success("Импорт завершен");
+      reloadData();
     } else {
       toast.error("Ошибка импорта", {
         description: result.error || "Неизвестная ошибка"

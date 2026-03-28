@@ -87,12 +87,18 @@ export default function Index() {
     loadPasswords(selectedCategoryId);
   };
 
+  const reloadData = () => {
+    loadCategories();
+    loadPasswords(selectedCategoryId);
+  };
+
   return (
     <WindowFrame
       title="KittyPass - Менеджер паролей"
       icon={
         <img src="favicon.ico" className="w-4 h-4" />
       }
+      reloadData={reloadData}
     >
       <div className="flex h-full">
         {/* Sidebar */}

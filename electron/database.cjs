@@ -73,7 +73,7 @@ const removePassword = (id) => db.prepare('DELETE FROM passwords WHERE id = ?').
 
 // Импорт/экспорт
 const exportData = () => {
-  const categories = getCategories();
+  const categories = getCategories().filter(cat => cat.is_system !== 1);
   const passwords = getPasswords();
   return JSON.stringify(
     {
@@ -103,16 +103,15 @@ const importData = (jsonData) => {
     throw new Error('Categories and passwords must be arrays');
   }
   const categoryMap = new Map();
+  for (let i = 1; i <= 3; i++) {
+    categoryMap.set(i, i);
+  }
   for (const cat of categories) {
     if (cat.name && cat.icon) {
       const info = db.prepare(`
         INSERT INTO categories (name, icon, is_system)
         VALUES (?, ?, ?)
-      `).run(
-        cat.name,
-        cat.icon,
-        cat.is_system ? 1 : 0
-      );
+      `).run(cat.name, cat.icon, 0);
       categoryMap.set(cat.id, info.lastInsertRowid);
     }
   }

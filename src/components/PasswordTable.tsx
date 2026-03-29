@@ -78,12 +78,12 @@ export function PasswordTable({ passwords, onAdd, onEdit, onDelete }: PasswordTa
     const data = passwords.find((p) => p.id === selectedId);
     if (!data)
       return;
-    if (e.ctrlKey && e.key === "c") {
-      e.preventDefault();
-      copyPassword(data.id, data.password);
-    } else if (e.ctrlKey && e.key === "x") {
+    if (e.ctrlKey && e.code === "KeyX") {
       e.preventDefault();
       copyUsername(data.id, data.username);
+    } else if (e.ctrlKey && e.code === "KeyC") {
+      e.preventDefault();
+      copyPassword(data.id, data.password);
     }
   }, [selectedId, passwords]);
 

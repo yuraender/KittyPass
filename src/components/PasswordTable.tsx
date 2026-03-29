@@ -1,5 +1,15 @@
 import { useState, useEffect, useCallback } from "react";
 import { Eye, EyeOff, Copy, Check, Pencil, Trash2, Plus, Search, X } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction
+} from "@/components/ui/alert-dialog";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
@@ -25,6 +35,7 @@ export function PasswordTable({ passwords, onAdd, onEdit, onDelete }: PasswordTa
   const [copiedId, setCopiedId] = useState<number | null>(null);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [deletedId, setDeletedId] = useState<number | null>(null);
 
   // Filter passwords by search
   const filteredPasswords = passwords.filter((p) =>
@@ -234,7 +245,7 @@ export function PasswordTable({ passwords, onAdd, onEdit, onDelete }: PasswordTa
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          onDelete(entry.id);
+                          setDeletedId(entry.id);
                         }}
                         className="p-1.5 hover:bg-destructive/20 rounded transition-colors"
                         title="Удалить"
@@ -249,6 +260,32 @@ export function PasswordTable({ passwords, onAdd, onEdit, onDelete }: PasswordTa
           </tbody>
         </table>
       </div>
+
+      {/* Delete dialog */}
+      <AlertDialog open={!!deletedId} onOpenChange={(open) => !open && setDeletedId(null)}>
+        <AlertDialogContent className="sm:max-w-sm">
+          <AlertDialogHeader>
+            <AlertDialogTitle>🗑️ Удалить запись?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Эта запись будет удалена безвозвратно. Продолжить?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Отмена</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={() => {
+                if (deletedId) {
+                  onDelete(deletedId);
+                  setDeletedId(null);
+                }
+              }}
+            >
+              Удалить
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

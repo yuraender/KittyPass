@@ -230,7 +230,7 @@ export function WindowFrame({ title, icon, reloadData, children }: WindowFramePr
       {/* Status bar */}
       <div className="relative flex items-center justify-between px-3 py-1 bg-muted border-t border-border text-xs text-muted-foreground">
         <span></span>
-        <span>KittyPass v1.0.1-dev</span>
+        <span>KittyPass v1.0.1</span>
       </div>
 
       <ThemeSettingsDialog isOpen={themeOpen} onClose={() => setThemeOpen(false)} initialTab={themeTab} />

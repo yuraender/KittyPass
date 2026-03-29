@@ -86,16 +86,19 @@ export function WindowFrame({ title, icon, reloadData, children }: WindowFramePr
         </div>
         <div className="flex items-center gap-1">
           <button
+            tabIndex={-1}
             onClick={() => window.electronAPI.minimizeWindow()}
             className="p-1 hover:bg-primary-foreground/20 rounded transition-colors">
             <Minus className="w-3.5 h-3.5 text-primary-foreground" />
           </button>
           <button
+            tabIndex={-1}
             onClick={() => window.electronAPI.maximizeWindow()}
             className="p-1 hover:bg-primary-foreground/20 rounded transition-colors">
             <Square className="w-3 h-3 text-primary-foreground" />
           </button>
           <button
+            tabIndex={-1}
             onClick={() => window.electronAPI.closeWindow()}
             className="p-1 hover:bg-destructive rounded transition-colors">
             <X className="w-3.5 h-3.5 text-primary-foreground" />

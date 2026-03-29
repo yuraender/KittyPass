@@ -67,7 +67,7 @@ export function PasswordTable({ passwords, onAdd, onEdit, onDelete }: PasswordTa
     await navigator.clipboard.writeText(password);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
-    toast({ title: "🔑 Пароль скопирован в буфер обмена" });
+    toast({ title: "🔑 Пароль скопирован" });
   };
 
   const maskPassword = (password: string) => "•".repeat(Math.min(password.length, 12));

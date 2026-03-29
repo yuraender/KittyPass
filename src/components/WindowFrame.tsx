@@ -42,7 +42,7 @@ export function WindowFrame({ title, icon, reloadData, children }: WindowFramePr
     if (result.canceled)
       return;
     if (result.success) {
-      toast.success("Пароли успешно экспортированы", {
+      toast.success("Экспорт завершен", {
         description: `Файл сохранен: ${result.filePath.split(/[/\\]/).pop()}`,
       });
     } else {
@@ -248,14 +248,14 @@ export function WindowFrame({ title, icon, reloadData, children }: WindowFramePr
           </DialogHeader>
           <div className="space-y-3 pt-2">
             <p className="text-center text-xs text-foreground pt-1">
-				Выбери запись кликом, потом можно использовать кнопки
+                Выбери запись кликом, потом можно использовать клавишу
             </p>
             <div className="flex items-center justify-between py-2 px-3 rounded-md bg-muted">
-              <span className="text-sm text-foreground">Копировать логин</span>
+              <span className="text-sm text-foreground">Скопировать имя пользователя</span>
               <kbd className="px-2 py-1 text-xs font-mono rounded border border-border bg-background text-foreground">Ctrl + X</kbd>
             </div>
             <div className="flex items-center justify-between py-2 px-3 rounded-md bg-muted">
-              <span className="text-sm text-foreground">Копировать пароль</span>
+              <span className="text-sm text-foreground">Скопировать пароль</span>
               <kbd className="px-2 py-1 text-xs font-mono rounded border border-border bg-background text-foreground">Ctrl + C</kbd>
             </div>
           </div>

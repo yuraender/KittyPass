@@ -5,12 +5,12 @@
   "type": "module",
   "main": "electron/main.cjs",
   "scripts": {
-    "dev": "concurrently \"npm run vite\" \"npm run electron\"",
+    "rebuild": "electron-rebuild -f -w better-sqlite3",
+    "postinstall": "npm run rebuild && electron-builder install-app-deps",
     "vite": "vite",
     "electron": "cross-env NODE_ENV=development electron .",
-    "build": "vite build && electron-builder",
-    "dist": "npm run build",
-    "lint": "eslint ."
+    "dev": "concurrently \"npm run vite\" \"npm run electron\"",
+    "build": "vite build && electron-builder"
   },
   "build": {
     "appId": "ru.yuraender.kittypass",

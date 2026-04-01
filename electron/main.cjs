@@ -1,4 +1,4 @@
-const { app, BrowserWindow, dialog, ipcMain } = require('electron');
+const { app, BrowserWindow, Tray, Menu, ipcMain, dialog } = require('electron');
 const fs = require('fs');
 const path = require('path');
 const db = require('./database.cjs');
@@ -6,6 +6,7 @@ const db = require('./database.cjs');
 const isDev = process.env.NODE_ENV === 'development';
 
 let mainWindow;
+let tray;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -30,15 +31,35 @@ function createWindow() {
   }
 }
 
+function createTray() {
+  tray = new Tray(path.join(__dirname, '../src/assets/icon.ico'));
+  tray.setToolTip('KittyPass');
+  tray.setContextMenu(Menu.buildFromTemplate([
+    {
+      label: 'Закрыть KittyPass',
+      click: () => {
+        app.quit();
+      },
+    },
+  ]));
+  tray.on('click', () => {
+    if (mainWindow?.isVisible()) {
+      mainWindow.hide();
+    } else {
+      mainWindow?.show();
+    }
+  });
+}
+
 ipcMain.on('window-minimize', (event) => {
   BrowserWindow.fromWebContents(event.sender).minimize();
 });
 ipcMain.on('window-maximize', (event) => {
   const win = BrowserWindow.fromWebContents(event.sender);
-  if (win.isMaximized())
-    win.unmaximize();
+  if (mainWindow.isMaximized())
+    mainWindow.unmaximize();
   else
-    win.maximize();
+    mainWindow.maximize();
 });
 ipcMain.on('window-close', (event) => {
   BrowserWindow.fromWebContents(event.sender).close();
@@ -93,6 +114,26 @@ if (!lock) {
   app.quit();
   return;
 }
+let isQuiting = false;
+
+app.whenReady().then(() => {
+  createWindow();
+  createTray();
+  mainWindow?.on('close', (e) => {
+    if (isQuiting) {
+	  return;
+    }
+    e.preventDefault();
+    mainWindow?.hide();
+  });
+});
+
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow();
+  }
+});
+
 app.on('second-instance', () => {
   if (mainWindow) {
     if (mainWindow.isMinimized())
@@ -101,16 +142,12 @@ app.on('second-instance', () => {
   }
 });
 
-app.whenReady().then(createWindow);
-
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    app.quit();
+    mainWindow?.hide();
   }
 });
 
-app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
-  }
+app.on('before-quit', () => {
+  isQuiting = true;
 });

@@ -219,7 +219,7 @@ export function WindowFrame({ title, icon, reloadData, children }: WindowFramePr
             </div>
           )}
         </div>
-        <button onClick={() => setHelpMenuOpen(true)} className="px-2 py-0.5 hover:bg-pink-soft rounded text-foreground">Помощь</button>
+        <button onClick={() => setHelpMenuOpen(true)} className="px-2 py-0.5 hover:bg-pink-soft rounded text-foreground">Справка</button>
       </div>
 
       {/* Content */}
@@ -230,7 +230,7 @@ export function WindowFrame({ title, icon, reloadData, children }: WindowFramePr
       {/* Status bar */}
       <div className="relative flex items-center justify-between px-3 py-1 bg-muted border-t border-border text-xs text-muted-foreground">
         <span></span>
-        <span>KittyPass v1.0.1</span>
+        <span>KittyPass v1.0.2</span>
       </div>
 
       <ThemeSettingsDialog isOpen={themeOpen} onClose={() => setThemeOpen(false)} initialTab={themeTab} />
@@ -240,7 +240,7 @@ export function WindowFrame({ title, icon, reloadData, children }: WindowFramePr
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Keyboard className="w-5 h-5 text-primary" />
-              Помощь
+              Справка
             </DialogTitle>
             <DialogDescription>
               Горячие клавиши для работы с записями
